@@ -1,0 +1,1461 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!-- This is built from a template for a generic Internet Draft. Suggestions for
+     improvement welcome - write to Brian Carpenter, brian.e.carpenter @ gmail.com 
+     This can be converted using the Web service at http://xml.resource.org/ -->
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd">
+<!-- You want a table of contents -->
+<!-- Use symbolic labels for references -->
+<!-- This sorts the references -->
+<!-- Change to "yes" if someone has disclosed IPR for the draft -->
+<!-- This defines the specific filename and version number of your draft (and inserts the appropriate IETF boilerplate -->
+<?rfc sortrefs="yes"?>
+<?rfc toc="yes"?>
+<?rfc symrefs="yes"?>
+<?rfc compact="yes"?>
+<?rfc subcompact="no"?>
+<?rfc topblock="yes"?>
+<?rfc comments="no"?>
+<rfc category="info" docName="draft-kdj-nmrg-ibn-usecases-02"
+     ipr="trust200902">
+  <front>
+    <title abbrev="Network Working Group">Use Cases and Practices for
+    Intent-Based Networking</title>
+
+    <author fullname="Kehan Yao" initials="K." role="editor" surname="Yao">
+      <organization>China Mobile</organization>
+
+      <address>
+        <postal>
+          <street/>
+
+          <city>Beijing</city>
+
+          <code>100053</code>
+
+          <country>China</country>
+        </postal>
+
+        <email>yaokehan@chinamobile.com</email>
+      </address>
+    </author>
+
+    <author fullname="Danyang Chen" initials="D." role="editor" surname="Chen">
+      <organization>China Mobile</organization>
+
+      <address>
+        <postal>
+          <street/>
+
+          <city>Beijing</city>
+
+          <code>100053</code>
+
+          <country>China</country>
+        </postal>
+
+        <email>chendanyang@chinamobile.com</email>
+      </address>
+    </author>
+
+    <author fullname="Jaehoon Paul Jeong" initials="J." role="editor"
+            surname="Jeong">
+      <organization abbrev="Sungkyunkwan University">Department of Computer
+      Science and Engineering</organization>
+
+      <address>
+        <postal>
+          <street>Sungkyunkwan University</street>
+
+          <street>2066 Seobu-Ro, Jangan-Gu</street>
+
+          <city>Suwon</city>
+
+          <region>Gyeonggi-Do</region>
+
+          <code>16419</code>
+
+          <country>Republic of Korea</country>
+        </postal>
+
+        <phone>+82 31 299 4957</phone>
+
+        <facsimile>+82 31 290 7996</facsimile>
+
+        <email>pauljeong@skku.edu</email>
+
+        <uri>http://iotlab.skku.edu/people-jaehoon-jeong.php</uri>
+      </address>
+    </author>
+
+    <author fullname="Qin Wu" initials="Q." surname="Wu">
+      <organization>Huawei</organization>
+
+      <address>
+        <email>bill.wu@huawei.com</email>
+      </address>
+    </author>
+
+    <author fullname="Chungang Yang" initials="C." surname="Yang">
+      <organization>Xidian University</organization>
+
+      <address>
+        <email>cgyang@xidian.edu.cn</email>
+      </address>
+    </author>
+
+    <author fullname="Luis M. Contreras" initials="L." surname="Contreras">
+      <organization>Telefonica</organization>
+
+      <address>
+        <email>luismiguel.contrerasmurillo@telefonica.com</email>
+      </address>
+    </author>
+
+    <date day="26" month="July" year="2024"/>
+
+    <area>Networking</area>
+
+    <workgroup>Internet Research Task Force</workgroup>
+
+    <keyword>Intent-based networking, network management, artificial
+    intelligence</keyword>
+
+    <abstract>
+      <t>This document proposes several use cases of Intent-Based Networking
+      (IBN) and the methodologies to differ each use case by following the
+      lifecycle of a real IBN system. It includes the initial system awareness
+      and data collection for the IBN system and the construction of the IBN
+      system, which consists of intent translation, deployment, verification,
+      evaluation, and optimization. Practice learnings are also
+      summarized to instruct the construction of next generation network
+      management systems with the integration of IBN techniques.</t>
+    </abstract>
+
+    <note title="Requirements Language">
+      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+      "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+      document are to be interpreted as described in <xref
+      target="RFC2119">RFC 2119</xref>.</t>
+    </note>
+  </front>
+
+  <middle>
+    <section anchor="intro" title="Introduction">
+      <t><xref target="RFC9315"/> gives the concepts and definition of
+      Intent-Based Networking (IBN), and <xref target="RFC9316"/> proposes a
+      comprehensive taxonomy of the intent classifications. Although the
+      intent life cycle has been defined, including all the core functional
+      components like intent ingestion, intent translation, policy generation,
+      and intent assurance. However, there is still a gap between defining
+      these high-level functionality and building realistic IBN systems. This
+      document proposes several IBN use cases and summarizes the methodologies
+      and practice learnings when building these IBN systems. Main objectives
+      of this document is to instruct future research directions of IBN and
+      other related network management technologies.</t>
+    </section>
+
+    <section title="Methodologies for Building IBN Systems">
+      <t>This section summarizes the methodologies to build an IBN system.
+      These methodologies refer to the modelling of IBN life cycle and those
+      high-level core functional components, as well as the specific solutions
+      to implement those components. The methodologies are essential to build
+      a real IBN system, beyond the definition in <xref target="RFC9315"/>.
+      The methodologies to an IBN system are composed of several important
+      parts, including the system awareness and data collection, construction
+      of IBN systems, integration and deployment, evaluation, optimization,
+      and reconfiguration of intents and policies.</t>
+
+      <section title="System Awareness and Data Collection" toc="default">
+        <t>System awareness requires the collection of various network status
+        indicators, like network traffic and resources. Building a valuable
+        dataset is essential for IBN systems. A comprehensive data collection
+        depends on suitable methods and tools, appropriate sampling metrics,
+        and reasonable granularity for data collection.<list style="numbers">
+            <t>Methods and Tools<list style="symbols">
+                <t>There are many existing ways to collect network data which
+                can be primarily classified into two types, active measurement
+                and passive measurement. Active measurement like In-band
+                network telemetry (INT) can grab networking information by
+                inserting timestamps into programmable field of on-path
+                packets. Passive measurement, on the other hand, uses some
+                tools like Tcpdump or wireshark to collect data at specific
+                targets, like endpoint servers. IBN systems need both of the
+                ways to collect data, depending on what scenarios they might
+                be applied to.</t>
+              </list></t>
+
+            <t>Metrics<list style="symbols">
+                <t>Metrics include traffic-related and network-related
+                information. Traffic-related metrics are performance
+                indicators, such as latency, throughput, and traffic
+                congestion signals. Network-related information includes
+                network device information, like the number and health status
+                of ports, and network topology information, such as link
+                connectivity and structures. To meet a specific user
+                intention, such as load balancing and congestion elimination
+                on the entire network, IBN systems need to collect and process
+                traffic and device related information.</t>
+              </list></t>
+
+            <t>Granularity<list style="symbols">
+                <t>Network Traffic. Network traffic is usually collected in
+                various forms, such as per-packet and per-flow, and these are
+                two most typical types of data collection. Per-packet means
+                that each packet is tracked, which is very accurate, but it
+                also means greater monitoring overhead and state maintenance
+                overhead. In contrast, per-flow tracking does not need to
+                maintain too much state, and it generally uses five-tuples to
+                identify each flow, which often brings good observation
+                results. Other collection methods are like per-cell and
+                per-flowlet. Per-cell is to track each cell unit whose length
+                remains unchangeable, which is more friendly to system
+                management and control. This method is often applied to
+                Artificial Intelligent (AI) data center network monitoring.
+                The per-flowlet mode cuts a flow into several small flows at a
+                certain interval, which is more suitable for implementing
+                refined load balancing scenarios. The IBN system should select
+                an appropriate traffic collection granularity.</t>
+
+                <t>Time granularity. Time granularity means that the data
+                acquisition needs to adopt the appropriate time interval for
+                data sampling. In the extreme case, data is collected without
+                interruption. For example, the status information of each data
+                packet is reported to the monitoring module without
+                interruption. This collection method often brings too much
+                redundant information, which leads to a lot of storage and
+                computing overhead to the system. However, the method of
+                sampling without interruption or at a very low time interval
+                can better observe micro-bursts of the networking system. A
+                micro-burst occurs when a large amount of burst data is
+                received in milliseconds. For some black-box network systems
+                and some high-concurrency network systems, it is necessary to
+                sacrifice a certain amount of storage and computing costs to
+                collect data in a finer granularity time slot, so as to make
+                better trade-offs between system overhead and data acquisition
+                accuracy. By analyzing the historical behavior of IBN systems,
+                a reasonable time interval can be selected for data
+                acquisition.</t>
+
+                <t>Spatial granularity. Spatial granularity indicates that it
+                is necessary to select an appropriate physical scope of a
+                network for data collection. In some cases, the information
+                collection method based on the whole network and the whole
+                domains may not be suitable for all situations, and sometimes
+                the results obtained from the processing and analysis of the
+                collected data may not be accurate (e.g., RTT-based congestion
+                control in data center networking) or incur too much overhead
+                (e.g., hop-by-hop performance monitoring over the Internet).
+                The best way is to match the most appropriate spatial
+                granularity for user intents. For example, in wide-area data
+                transmission, users need to select an optimal path. In this
+                case, sampling is not required for all paths from a source to
+                a destination. Only partial sampling is required for certain
+                path segments which share endpoints, to ensure the correctness
+                of decision makings on path setup in a scenario of multi-path
+                data transmission.</t>
+              </list></t>
+          </list></t>
+      </section>
+
+      <section title="Construction of IBN Systems">
+        <t>In the construction of an IBN system, intent translation module,
+        policy generation and mapping module, and intent verification module
+        play an important role. The different construction methods and
+        different construction tools used in these modules may affect the
+        advantages of realizing the intention. For different modules, we
+        summarize the methods and tools that have been used and may be
+        used.<list style="numbers">
+            <t>Intent Translation<list style="symbols">
+                <t>Translating and refining intents require the system to
+                explore and exploit the semantic relationships of different
+                service intents, and thus it is necessary to build a general
+                model to extract these key semantic information from the
+                service intents in different representation forms. In the
+                intent translation module, several possible intent expression
+                and translation methods are as follows:<list style="symbols">
+                    <t>A limited range of templates are preset in advance, and
+                    users can only express corresponding intentions by filling
+                    in or selecting templates. The advantage of this method is
+                    that the requirements for users and translation are very
+                    low, and all users can use it without learning. The
+                    disadvantage is that there are many restrictions, which
+                    can only be achieved through the preset template, but the
+                    preset template is limited, and cannot really meet the
+                    flexible and diverse needs of users;</t>
+
+                    <t>Using natural language processing (NLP), such as BERT,
+                    for intent translation is another possible approach.
+                    First, natural language processing is used to convert a
+                    user intent into a text intent, and then the key
+                    parameters of text intent are extracted to form the
+                    corresponding intent expression. The advantage of this
+                    method is high flexibility, users can directly express
+                    their intentions in a natural language according to their
+                    own needs, without being limited by templates. The
+                    disadvantage is that it is difficult to implement and has
+                    high requirements for the intent translation module, which
+                    needs to be able to accurately identify the real intent of
+                    users, and different intents expression paradigms will
+                    affect the generation of subsequent policies, so it is
+                    necessary to formalize normative intent expression
+                    grammars.</t>
+
+                    <t>On the basis of the above natural language-based
+                    approach, with the development of AI technologies such as
+                    deep learning in the field of text processing, key
+                    information in sentences can be extracted by AI model
+                    detection. Therefore, based on different AI models, the
+                    translation method of category detection and key
+                    information extraction of intent representation statements
+                    is another approach to intent translation. The advantage
+                    of this method is that the expression of the user's
+                    intention is more flexible, and the real intention of the
+                    user can be mined to a certain extent. The disadvantage is
+                    in the deployment cost. Selecting an appropriate AI model
+                    to complete the model training is costly.</t>
+
+                    <t>In addition, there are some pre-set expression
+                    languages for IBN networks, such as Nile, and NEMO. In the
+                    design of these language expressions, most of them
+                    consider the flexibility of expression, which can be
+                    extended and adjusted according to the intention scenario
+                    of the business under consideration. However, these
+                    language designs have some disadvantages (e.g., the
+                    capability of intent expression). Most of the users are
+                    network practitioners, requiring users to have certain
+                    network knowledge background.</t>
+                  </list></t>
+              </list></t>
+
+            <t>Policy Generation and Mapping<list style="symbols">
+                <t>In the intent-based network, the generation of the
+                corresponding network policy needs to consider both the input
+                intent and the network state, that is, the policy needs to
+                satisfy the user's intent and ensure that the network can be
+                executed to satisfy the requested intent. The policy
+                generation module can be implemented by setting up a
+                repository of &ldquo;intent&rdquo; - &ldquo;policy&rdquo;, and
+                new mapping relationship should be stored and updated as
+                knowledge according to various intents and dynamic network
+                state telemetry. Similar to different ways of expressing an
+                intent, there are different approaches for policy generation
+                and mapping.<list style="symbols">
+                    <t>As opposed to the default template-based representation
+                    in the intent representation module, the simplest approach
+                    to policy generation is based on a default template or
+                    rule-based provisioning. After the user completes the
+                    corresponding intention expression through the graphical
+                    interface (e.g., a web-based graphical user
+                    interface(GUI)), the user can select the corresponding
+                    policy according to the preset template in the policy
+                    generation and matching a module or associate the
+                    corresponding rules in the constructed rule-based policy
+                    generator. Similar to the above analysis, this approach
+                    has the advantage of being very simple to implement, but
+                    the disadvantage is that it is too restrictive and only a
+                    limited number of preset strategies can be selected.</t>
+
+                    <t>The second common method of policy generation and
+                    mapping is inference-based generation, such as reasoning
+                    based on keywords or keywords in an intention expression,
+                    associating keywords with policies, and using circular
+                    reasoning to generate policies. This method is more
+                    flexible than the template class description method, but
+                    the precision of policy generation is more related to the
+                    keyword extraction, and there is some uncertainty. In
+                    addition, there are policy generation methods based on
+                    network service description, which are widely used in
+                    service function chaining (SFC), network slicing or
+                    network functions virtualization (NFV). In essence, this
+                    approach can also be seen as inference-based strategy
+                    generation</t>
+
+                    <t>In addition to the above methods, AI technology-based
+                    strategy generation methods have also emerged in recent
+                    years, such as machine learning technology, which selects
+                    corresponding strategies through model training according
+                    to keywords extracted from an intention expression. With
+                    the development of AI technology, in addition to selecting
+                    preset strategies, for example, based on deep
+                    reinforcement learning, reasonable reward functions are
+                    set to generate strategies that consider user intentions
+                    and network status.</t>
+                  </list></t>
+              </list></t>
+
+            <t>Intent Deployment<list style="symbols">
+                <t>Intent Deployment is to deploy the policy translated from 
+                an intent into a target network and let the configurations 
+                or commands for the policy operate in the network.
+                <list style="symbols">
+                    <t>The intent translator delivers a policy with detailed
+                    configurations or commands to an intent renderer which
+                    deploys the policy into target network entities (e.g.,
+                    switch, router, firewall, web filter, and DDoS-attack
+                    mitigator).</t>
+
+                    <t>The intent renderer delivers the policy to the target
+                    network entities with a policy delivery protocol such as
+                    NETCONF <xref target="RFC6241"/>, RESTCONF <xref
+                    target="RFC8040"/>, or REST API <xref target="REST"/>.</t>
+                  </list></t>
+              </list></t>
+
+            <t>Intent Verification<list style="symbols">
+                <t>Intent verification includes intent conflict detection and
+                checking whether intents meet a specific user's requirements
+                or not.<list style="symbols">
+                    <t>The intent conflict detection includes two types: the
+                    conflicts between different intents themselves and the
+                    conflicts between policies and network states of the
+                    target network to perform the requested intent. The
+                    conflict of intentions may be due to the conflict between
+                    the network states that different users want to obtain.
+                    The simplest example is that both users A and B request to
+                    increase the bandwidth of 10Gbps, but the network
+                    bandwidth of the shared network for users A and B is less
+                    than 20Gbps. This conflict caused by different user
+                    requirements can be resolved by checking whether the
+                    intents can be deployed in practice, that is, you can
+                    choose to execute only the intents that can be executed
+                    according to the preset rules, and reject other intents.
+                    If the generated policy conflicts with the network state,
+                    the network state must be detected when the generated
+                    policy is generated to ensure that the generated policy
+                    can be executed by the target network. If the generated
+                    policy cannot be executed, the policy needs to be
+                    re-generated. Otherwise, the policy generation of the
+                    intent should be reported of a failure to the intent
+                    user.</t>
+
+                    <t>In terms of whether the user's intent is satisfied or
+                    not, the first way is to feedback the result to the user,
+                    and the user judges whether it is satisfied. This way the
+                    execution result can be presented through a graphical
+                    interface. The second way is to use AI methods such as
+                    deep reinforcement learning to determine whether the
+                    results meet the needs.</t>
+                  </list></t>
+              </list></t>
+
+            <t>Evaluation<list style="symbols">
+                <t>Evaluation is to judge whether an intent is satisfied by
+                network entities (e.g., switch, router, firewall, web filter,
+                and DDoS-attack mitigator) or not. The intent is translated
+                into a policy with detailed configurations or commands by an
+                intent translator. The policy may have goals in terms of
+                performance (e.g., throughput and delay) and services (e.g.,
+                firewall, web filter, and DDoS-attak mitigator).<list
+                    style="symbols">
+                    <t>An evaluation entity (e.g., analyzer) needs to collect
+                    monitoring data from the network entities and check
+                    whether the required goals for each intent are met with
+                    specific metrics from the monitoring data or not. This
+                    checking can be performed by Artificial Intelligence (AI)
+                    and Machine Learning (ML) algorithms.</t>
+
+                    <t>Evaluation results need to be delivered to an optimizer
+                    which can augment the existing policy or generate a new
+                    policy.</t>
+                  </list></t>
+              </list></t>
+
+            <t>Optimization<list style="symbols">
+                <t>Optimization is to augment the existing policy or generate
+                a new policy to meet the goals of the requested intent. With
+                the evaluation results, an optimization entity (e.g.,
+                optimizer) performs optimization for each registered
+                intent.<list style="symbols">
+                    <t>There are two kinds of optimization, such as Quality of
+                    Service (QoS) and Service Provisioning. First, the
+                    optimizer for QoS deals with the improvement of
+                    performance metrics (e.g., throughput and delay). Second,
+                    the optimizer for service provisioning handles the service
+                    requirements (e.g., firewall filtering, web filtering, and
+                    DDoS-attack mitigation). For each optimization, the
+                    optimizer augments the existing policy or generates a new
+                    policy. It delivers the policy to the intent renderer so
+                    that the rendered can enforce the augmented or generated
+                    policy into the target network entities.</t>
+
+                    <t>Thus, the steps from Intent Deployment to Optimization
+                    construct a closed-loop control to guarantee the goals of
+                    the requested intent in a target network.</t>
+                  </list></t>
+              </list></t>
+          </list></t>
+      </section>
+    </section>
+
+    <section title="IBN Use Cases">
+      <t>In this Section, we will describe several scenarios where IBN can be
+      applied. These use cases can reflect the aforementioned methodologies of
+      IBN systems from different perspectives.</t>
+
+      <section title="IBN for Routing and Path Selection">
+        <t>IBN can be applied in building network path and generating routing
+        policies according to network administrators' requests.</t>
+
+        <section title="IBN for Service Function Chaining">
+          <t>We use the intent-based dynamic SFC as an example to solve the
+          network management challenges (e.g., cross-domain orchestration and
+          service functions are tightly coupled with the underlying
+          equipment). At the same time, we developed an Openstack-based IBNM
+          platform. The system architecture is shown as Fig 1, which includes
+          the application layer, the intent-enabled layer and the
+          infrastructure layer. The application layer collects intents from
+          various users and applications, and provides a number of
+          programmable network management services. The intent-enabled layer
+          consists of the intent translation module, intelligent policy
+          mapping module, and intent guarantee module, whose functions are to
+          build a bridge between the application layer and the infrastructure
+          layer. Heterogeneous physical devices are deployed in the
+          infrastructure layer. This layer can execute management instructions
+          from the intent-enabled layer and upload underlying network
+          situation information to the intent-enabled layer. Information
+          interaction between different layers is done through different
+          interfaces, such as the northbound and southbound interfaces.
+          <figure title="The Architecture of IBNM">
+              <artwork>  
+  +----------------------------------------+
+  |          Application   Layer           |
+  +-------------+---------^----------------+
+Intent Ingestion|         | Northbound Interface
+  +-------------+---------v----------------+
+  |             |      Intent-enabled Layer|
+  | +-----------+-------+  +-------------+ |
+  | |           |       |  |             | |
+  | |  +--------v----+  |  |             | |
+  | |  | Translation |  |  |             | |
+  | |  +-------------+  |  |             | |
+  | |                   |  | Intelligent | |
+  | |  +-------------+  |  |             | |
+  | |  | Verification|  |  |  Guarantee  | |
+  | |  +-------------+  |  |             | |
+  | |Intent Translation |  |    Module   | |
+  | |      Module       |  |             | |
+  | +-------------------+  |             | |
+  |                        |             | |
+  | +-------------------+  |             | |
+  | |Intelligent Policy |  |             | |
+  | |  Mapping Module   |  |             | |
+  | +-------------------+  +-------------+ |
+  |                                        |
+  +--------------------^-------------------+
+                       |  Southbound Interface
+  +--------------------v-------------------+
+  |         Infrastructure Layer           |
+  +----------------------------------------+
+  </artwork>
+            </figure></t>
+
+          <t>The system demonstration implements the whole process from intent
+          input to intent translation to intent policy generation to intent
+          deployment, and the details are as follows.</t>
+
+          <t>The user input cross-domain link-building requests (intent) in
+          natural language at the web-page: Transfer a common-level video
+          service from user A in Beijing to user B in Nanjing while
+          constraining the execution time of the intent. The intent
+          translation module outputs a conflict-free translation result, which
+          indicates that the external input and the translation platform have
+          been communicated. The translation results are intent tuples, which
+          are displayed on the front-end interface in the form of name-value
+          pairs. After the intent translation module, the translation results
+          will be converted to JavaScript Object Notation (JSON) and
+          transmitted to the intelligent policy mapping module. The
+          intelligent policy mapping module divides the JSON request into an
+          SFC: service function 1 (network address translation) service
+          function 2 (firewall), and constructs the SFC request (name,
+          tenant_id, description, service requirements, etc.). Then query
+          whether there is an atomic policy combination that satisfies the
+          current intent requirements in the policy repository. Following
+          that, SFC is constructed based on the SFC interface, which is
+          extended by Neutron. OpenStack schedules network resources,
+          constructs sub-nets and ports, and generates two-dimensional space
+          topology. Meanwhile, during the SFC construction process, the intent
+          guarantee module monitors and manages network resource utilization
+          as well as network failures in real time. Overall, IBNM achieves the
+          decoupling of service application and network, and cross-domain
+          network orchestration, while reducing the complexity of network
+          management.</t>
+        </section>
+
+        <section title="IBN for SRv6 Networks">
+          <t>For the automation of configuration and monitoring of Segment
+          Routing version six (SRv6) routers, an IBN-based secure network
+          management is proposed by <xref
+          target="I-D.park-nmrg-ibn-network-management-srv6"/>. The proposed
+          Intent-Based Network Management (IBNM) framework consists of system
+          components and interfaces, as shown in <xref
+          target="figure:IBNM-in-SRv6-Networks"/>. This framework builds on
+          the framework for Interface to Network Security Functions (I2NSF)
+          <xref target="RFC8329"/>.</t>
+
+          <figure anchor="figure:IBNM-in-SRv6-Networks"
+                  title="Intent-Based Network Management in SRv6 Networks">
+            <artwork>
+   +-------------+                   +-----------------------------+
+   |  IBN User   |                   | Global Distributed Database |
+   +-------------+                   +-----------------------------+
+          ^                                                     ^
+          | Consumer-Facing                    Software Update  |
+          | Interface                            Interface (Up) |
+          v                                                     v
++-------------------+     Registration     +-----------------------+
+|   IBN Controller  |&lt;--------------------&gt;|  Vendor's Mgmt System |
++-------------------+      Interface       +-----------------------+
+          ^      ^                                            ^
+          |      |                  Software Update Interface |
+          |      |                                     (Down) |
+          |      |   Analytics Interface   +----------------+ |
+          |      +------------------------&gt;|  IBN Analyzer  | |
+          |                                +----------------+ |
+          | NSF-Facing Interface                   ^          |
+          |                                        |          |
+          |                  +---------------------+          |
+          |                  |  Monitoring Interface          |
+          |                  |                                |
++---------+------------------+--------------------------------+----+
+|         v                  v         SRv6 Nodes             v    |
+| +-----------------+  +---------------+         +---------------+ |
+| |     NSF-1       |--|     NSF-2     | ....... |     NSF-n     | |
+| |(Network Exposure|  |(Policy Control|         | (Application  | |
+| | Function, NEF)  |  | Function, PCF)|         |  Function, AF)| |
+| +-----------------+  +---------------+         +---------------+ |
++------------------------------------------------------------------+
+            </artwork>
+          </figure>
+
+          <t>A high-level network policy for SRv6 routers is constructed by
+          the IBN Consumer-Facing Interface YANG data model. On the other
+          hand, a low-level network policy is constructed by the IBN
+          NSF-Facing Interface YANG data model.</t>
+
+          <t>To automate Network Policy Translation (NPT), IBN Controller
+          needs a network policy translator performing the translation of a
+          high-level network policy into the corresponding low-level network
+          policy (i.e., SRv6 policy <xref target="RFC9256"/>). For this
+          automatic NPT service, the IBN framework needs to associate a
+          high-level YANG data model and a low-level YANG data model in an
+          automatic manner, like a data model mapper <xref
+          target="I-D.ietf-spring-sr-policy-yang"/>, <xref
+          target="I-D.yang-i2nsf-security-policy-translation"/>.</t>
+        </section>
+      </section>
+
+      <section title="IBN for SLA Guarantee">
+        <t>Taking Network Service-Level Agreement (SLA) performance metrics
+        (e.g., delay measurement), the simple schematic diagram is as follows.
+        Different thresholds, warning value, and alert value should be set for
+        network delay in advance. When the delay value is below warning, the
+        network is normal and the business is normal. When the delay is
+        between warning value and alert value, the network fluctuation is
+        abnormal, but the business is normal. When the delay exceeds the alert
+        value, both the network and business are abnormal. For delay in
+        different thresholds, different measurement strategies should be
+        adopted:<list style="symbols">
+            <t>When the network delay exceeds the alert value, or when the
+            historical data predict that the delay will exceed the alert
+            value, passive measurement requires 100% sampling of business
+            data, and the transmission frequency of active measurement is
+            modulated to the maximum. At the same time, the log and alarm data
+            of the whole network equipment are collected to realize the most
+            fine-grained measurement of the network, locate the root cause of
+            the problem and repair the network in time.</t>
+
+            <t>When the network delay exceeds warning value but is lower than
+            alert value, passive measurement samples 60% of business data, and
+            the transmission message frequency of the active measurement is
+            adjusted to the median value, and the running state data of some
+            key devices in the network is collected synchronously.</t>
+
+            <t>When the network delay is less than warning value, passive
+            measurement data is sampled at 20%, and active measurement message
+            frequency is adjusted to the lowest, and the network equipment
+            running state of key nodes can be collected as needed.</t>
+          </list></t>
+
+        <figure title="Network SLA Performance Metric">
+          <artwork>        ^ms
+        |
+        |
+        |                         XX
+        |                        X X            Sampling Rate 100%
+        |                       XX X
+  alert +--------------------------------------------------------+
+        |                      X   X             Sampling Rate 60%
+        |                     X    XX
+        |                    X      X                XX
+        |          XX        X      X                XXX
+        |          XXX       X       X              X  X
+        |         XX X      X        X             X   XX  
+        |         X   XX    X        X  XX   XX    X    XX
+warning +-------------------------------------------------------+
+        |         X    XX  X          XX X  XX X  XX      XX
+        |     XX  X     X  X          X   XX   XX X        X
+        |    XX X X     X  X          X   XX    XXX         X
+        |   X   XX       XXX          X         XX          X
+        |   X   XX       XX           X
+        |        X       XX                      Sampling Rate 20%
+        |
+        +-----------------------------------------------------------&gt;
+</artwork>
+        </figure>
+
+        <t>The desired approach is to accurately measure the network state,
+        especially when there are some issues affecting the service, but at
+        the same time, reduce the resources to be employed to achieve the
+        desired accuracy.</t>
+
+        <section title="Clustered Alternate-Marking Methodology">
+          <t>The Clustered Alternate-Marking framework <xref
+          target="RFC9342">RFC 9342</xref> adds flexibility to Performance
+          Measurement (PM), because it can reduce the order of magnitude of
+          the packet counters. This allows the NMI Orchestration and
+          pre-Verification module to supervise, control, and manage PM in
+          large networks.</t>
+
+          <t><xref target="RFC9342">RFC 9342</xref> introduces the concept of
+          cluster partition of a network. The monitored network can be
+          considered as a whole or split into clusters that are the smallest
+          subnetworks (group-to-group segments), maintaining the packet loss
+          property for each subnetwork. The clusters can be combined in new
+          connected subnetworks at different levels, forming new clusters,
+          depending on the level of detail to achieve.</t>
+
+          <t>The clustered performance measurement intent represents the
+          spatial accuracy, that is the size of the subnetworks to consider
+          for the monitoring. It is possible to start without examining in
+          depth and, in case of necessity, the "network zooming" approach can
+          be used.</t>
+
+          <t>This approach called "network zooming" and can be performed in
+          two different ways:<list style="numbers">
+              <t>change the traffic filter and select more detailed flows;</t>
+
+              <t>activate new measurement points by defining more specified
+              clusters.</t>
+            </list></t>
+
+          <t>The network-zooming approach implies that some filters, rules or
+          flow identifiers are changed. But these changes must be done in a
+          way that do not affect the performance. Therefore there could be a
+          transient time to wait once the new network configuration takes
+          effect. Anyway, if the performance issue is relevant, it is likely
+          to last for a time much longer than the transient time.</t>
+
+          <t>The concrete steps of the clustered performance measurement
+          intent are as follows:<list style="symbols">
+              <t>In NMI Recognition and Acquisition, the clustered performance
+              measurement intent is recognized. Then the NMI Recognition and
+              Acquisition module inputs the clustered performance measurement
+              intent into the NMI Translation module.</t>
+
+              <t>The NMI Translation module analyzes the clustered performance
+              measurement intent and outputs the executable measurement
+              policy, such as network partition and the spatial accuracy for
+              the monitoring.</t>
+
+              <t>The NMI Orchestration and pre-Verification module arranges
+              and calibrates the measurement with the specific configuration
+              to split the whole network into clusters at different levels.
+              Note that, for the configuration, the YANG Data Model for the
+              Alternate Marking Method <xref
+              target="I-D.ydt-ippm-alt-mark-yang"/> can be used.</t>
+
+              <t>The Data Collection and Analysis module collects the
+              measurement data from the different clusters, and then send
+              these data to the NMI Compliance Assessment module. It verifies
+              the performance for each cluster and send the measurement
+              results to the user. Note that, for the collection of the
+              measurement data, the On-path Telemetry YANG Data Model <xref
+              target="I-D.fz-ippm-on-path-telemetry-yang"/> or the IPFIX
+              Alternate-Marking Information <xref
+              target="I-D.gfz-opsawg-ipfix-alt-mark"/> can be used.</t>
+
+              <t>The NMI Compliance Assessment module, in case a cluster is
+              experiencing a packet loss or the delay is high, notifies the
+              NMI Orchestration and pre-Verification module to modify the
+              cluster partition of the network for further investigation. The
+              network configuration can be immediately modified in order to
+              perform a new partition of the network but only for the cluster
+              with bad performance. In this way, the problem can be localized
+              with successive approximation up to a flow detailed analysis.
+              This is the so-called "closed loop" performance management.</t>
+            </list></t>
+        </section>
+      </section>
+
+      <section title="IBN for Cloud-Based Security Service Management">
+        <t>A Cloud-Based Security Service Management is proposed in <xref
+        target="I-D.jeong-i2nsf-security-management-automation"/>. It
+        describes Security Management Automation (SMA) of cloud-based security
+        services in the framework of Interface to Network Security Functions
+        (I2NSF) <xref target="RFC8329"/>. The security management automation
+        deals with closed-loop security control, security policy translation,
+        and security audit. To support these three features in SMA, an
+        augmented architecture of the I2NSF framework is proposed by
+        introducing new system components and new interfaces.</t>
+
+        <figure anchor="figure:Security-Management-Automation-in-I2NSF-Framework"
+                title="Security Management Automation in I2NSF Framework">
+          <artwork>
+   +------------+
+   | I2NSF User |
+   +------------+
+          ^
+          | Consumer-Facing Interface
+          v
++-------------------+     Registration     +-----------------------+
+|Security Controller|&lt;--------------------&gt;|Developer's Mgmt System|
++-------------------+      Interface       +-----------------------+
+          ^      ^
+          |      |
+          |      |   Analytics Interface   +-----------------------+
+          |      +------------------------&gt;|    I2NSF Analyzer     |
+          |                                +-----------------------+
+          | NSF-Facing Interface              ^       ^       ^
+          |                                   |       |       |
+          |                                   |       |       |
+          |    +------------------------------+       |       |
+          |    |              +-----------------------+       |
+          |    |              |   Monitoring Interface        |
+          v    v              v                               v
+   +----------------+ +---------------+   +-----------------------+
+   |      NSF-1     |-|     NSF-2     |...|         NSF-n         |
+   |   (Firewall)   | | (Web Filter)  |   |(DDoS-Attack Mitigator)|
+   +----------------+ +---------------+   +-----------------------+
+            </artwork>
+        </figure>
+
+        <t><xref
+        target="figure:Security-Management-Automation-in-I2NSF-Framework"/>
+        shows an IBN-driven I2NSF framework for Security Management Automation
+        (called SMA) of cloud-based security service management. I2NSF User
+        composes a high-level security policy (as an intent) and delivers it
+        to Security Controller. Security Controller translates the high-level
+        security policy into the corresponding low-level security policy that
+        is understandable to Network Security Functions (NSFs) for actual
+        security services. Security Controller has a Security Policy
+        Translator (SPT) for this security policy translation <xref
+        target="I-D.yang-i2nsf-security-policy-translation"/>.</t>
+
+        <t>As shown in <xref
+        target="figure:Security-Management-Automation-in-I2NSF-Framework"/>,
+        for closed-loop security control, this I2NSF framework has Monitoring
+        Interface and Analytics Interface along with I2NSF Analyzer. I2NSF
+        Analyzer collects monitoring data from NSFs via Monitoring Interface.
+        It analyzes the monitoring data using Artificial Intelligence (AI) and
+        Machine Learning (ML). I2NSF Analyzers delivers a policy
+        re-configuration message (e.g., defense against a new security attack
+        ) or feedback information message (e.g., action for handling computing
+        and communication resources) to Security Controller. Security
+        Controller receives the message and takes an appropriate action for
+        the message, such as a security policy re-configuration for target
+        NSFs and remedy action for the feedback information.</t>
+
+        <t>Therefore, with a security policy translator and a closed-loop
+        security control, we can provide service customers with IBN-based
+        security services.</t>
+      </section>
+
+      <section title="IBN for IoT Device Management">
+        <t>A Network Management Automation (NMA) can be provided for cellular
+        network services in 5G networks <xref
+        target="I-D.jeong-nmrg-ibn-network-management-automation"/>. This NMA
+        is feasible on top of an IBN-empowered framework. It deals with a
+        closed-loop network control, network intent translator, and network
+        management audit. To support these three features in NMA, it specifies
+        an architectural framework with system components and interfaces.
+        Also, this framework can support the use cases of NMA in 5G networks
+        such as the data aggregation of Internet of Things (IoT) devices,
+        network slicing, and the Quality of Service (QoS) in
+        Vehicle-to-Everything (V2X).</t>
+
+        <figure anchor="figure:Network-Management-Automation-in-IBN-Framework"
+                title="Network Management Automation in IBN Framework for 5G Networks">
+          <artwork>
+   +------------+
+   |  IBN User  |
+   +------------+
+          ^
+          | Consumer-Facing Interface (Intent)
+          v
++-------------------+     Registration     +-----------------------+
+|   IBN Controller  |&lt;--------------------&gt;|  Vendor's Mgmt System |
++-------------------+      Interface       +-----------------------+
+          ^      ^
+          |      |
+          |      |   Analytics Interface   +-----------------------+
+          |      +------------------------&gt;|  IBN Analyzer (NWDAF) |
+          |                                +-----------------------+
+          | NSF-Facing Interface (Policy)     ^       ^       ^
+          |                                   |       |       |
+          |                                   |       |       |
+          |    +------------------------------+       |       |
+          |    |              +-----------------------+       |
+          |    |              |   Monitoring Interface        |
+          v    v              v                               v
+   +---------------+  +---------------+        +---------------+
+   |     NSF-1     |--|     NSF-2     |........|     NSF-n     |
+   |(Net Exposure  |  |(Policy Control|        |  (IoT Device) |
+   | Function, NEF)|  | Function, PCF)|        |               |
+   +---------------+  +---------------+        +---------------+
+            </artwork>
+        </figure>
+
+        <t><xref
+        target="figure:Network-Management-Automation-in-IBN-Framework"/> shows
+        an IBN framework for Network Management Automation in 5G networks.
+        This framework is an I2NSF framework for cloud-based security
+        services. Like the framework for Security Management Automation
+        (called SMA) of cloud-based security services, this framework supports
+        an intent translation with a Network Intent Translator (NIT) and a
+        closed-loop control mechanism, it realizes an IBN-based IoT device
+        management in 5G networks.</t>
+      </section>
+
+      <section title="IBN for Sofware-Defined Vehicle Management">
+        <t>Software-Defined Vehicle (SDV) is an electrical vehicle with a
+        software platform (e.g., AUTOSAR and Eclipse SDV) towards autonomous
+        vehicles in Intelligent Transportation Systems (ITS). An SDV is
+        constructed by a software platform having a cloud-native system (e.g.,
+        Kubernetes) and has its internal network (e.g., a giga-bit Ethernet).
+        For facilitating the easy and efficient configuration of networks,
+        security, and applications in the SDV'S in-vehicle networks, an
+        intent-based management is required. An intent-based management
+        framework for SDVs is proposed by <xref
+        target="I-D.jeong-opsawg-intent-based-sdv-framework"/>. This framework
+        lets SDVs be configured and monitored by a vehicular cloud in terms of
+        networks, security, and applications in SDVs. In this framework, SDVs
+        can communicate with other SDVs and infrastructure nodes for safe
+        driving and infotainment services in ITS.</t>
+
+	<figure anchor="figure:Life-Cycle-of-IBS-for-SDV-Management" align="center"
+     title="The Life Cycle of IBS for SDV Management">
+          <artwork align="left">
+       SDV User      :            Translation/          : Network Ops/
+        Space        :             IBS Space            :  App Space
+Fulfill              :                                  :
+       +----------+  :  +------------+   +------------+ : +-----------+
+       |Recognize/|----&gt;| Translate/ |--&gt;|   Learn/   |--&gt;| Configure/|
+       | Generate |  :  |   Refine   |   |   Plan/    | : | Provision |
+       | Intent   |&lt;----|            |   |   Render   | : |           |
+       +----------+  :  +------------+   +------------+ : +-----------+
+            ^        :                         ^        :       |
+............|..................................|................|.....
+            |        :                    +----------+  :       v
+            |        :                    | Validate |  :  +----------+
+            |        :                    +----^-----+&lt;----| Monitor/ |
+Assure      |        :                         |        :  | Observe  |
+        +--------+   :  +----------+      +----------+&lt;----|          |
+        | Report |&lt;-----| Abstract |&lt;-----| Analyze/ |  :  +----------+
+        +--------+   :  +----------+      | Aggregate|  :
+                     :                    +----------+  :
+        </artwork>
+        </figure>
+
+        <t>According to the life cycle of IBN in <xref target="RFC9315"/>, as
+        shown in <xref target="figure:Life-Cycle-of-IBS-for-SDV-Management"/>,
+        the life cycle of an intent-based system (IBS) can be enforced for SDV
+        management. The life cycle consists of three spaces, namely SDV User
+        Space, Translation &amp; IBS Space, and Network Operations (Ops) &amp;
+        Application (App) Space. These spaces are divided into two sections in
+        the life cycle space, such as fulfillment and assurance. The
+        fulfillment section pipelines the steps for an intent enforcement,
+        such as intent input, translation/refinement,
+        learning/planning/rendering, and configuration/provisioning toward the
+        final SFs (e.g., network functions (NFs) and applications in SDVs). On
+        the other hand, the assurance section performs the steps for an Intent
+        assurance and optimization by collecting final results of the intent
+        fulfillment, and validating and analyzing the resulted NFs and
+        applications for SDVs. If an action for the found problem is needed,
+        the life cycle inserts a reconfigured policy into the fulfillment
+        section or report a required action to SDV User.</t>
+
+        <figure anchor="figure:Intent-Based-SDV-Management-Framework"
+                title="Intent-Based Management Framework for Software-Defined Vehicles">
+          <artwork>   
+                        &lt;Vehicular Cloud (VC)&gt;            
++---------------------------------------------------------------------+
+| +------------------+                      +--------------------+    |
+| |     SDV User     |          +----------&gt;|    SDV Database    |    |
+| +------------------+          |           +--------------------+    |
+|          ^                    |                     ^               |
+|          |                    | Database            | Database      |
+|          |                    | Interface           | Interface     |
+|          | Consumer-Facing    |                     V               |
+|          | Interface (Intent) |           +--------------------+    |
+|          |                    | +--------&gt;|    Cloud Analyzer  |&lt;-+ |
+|          |                    | |         +--------------------+  | |
+|          V                    | |Analytics                        | |
+| +------------------+&lt;---------+ |Interface                        | |
+| | Cloud Controller |&lt;-----------+         +--------------------+  | |
+| +------------------+&lt;--------------------&gt;|Vendor's Mgmt System|  | |
+|          ^         Registration Interface +--------------------+  | |
+|          |                                          ^             | |
++----------|------------------------------------------|-------------|-+
+           | Controller-Facing Interface   VMS-Facing |   Analyzer- |  
+           |     (High-level Policy)        Interface |   Facing    |
+           |                                          |   Interface |            
++----------|------------------------------------------|-------------|-+
+|          |                                          |             | |
+|          v                                          v             | |
+| +------------------+     Registration     +--------------------+  | |
+| |  SDV Controller  |&lt;--------------------&gt;|    SDV Vendor's    |  | |
+| +------------------+      Interface       |    Mgmt System     |  | |
+|          ^      ^                         +--------------------+  | |
+|          |      |                                                 | |
+|          |      |                                                 | |
+|          |      |   Analytics Interface   +--------------------+  | |
+|          |      +------------------------&gt;|    SDV Analyzer    |&lt;-+ |
+|          |                                +--------------------+    |
+|          | SF-Facing Interface                      ^               |
+|          |  (Low-level Policy)                      |               |
+|          |                                          |               |
+|          |                                          |               |
+|          |    +--------------+----------------------+---+           |
+|          |    |              |   Monitoring Interface   |           |
+|          v    v              v                          v           |
+|   +---------------+  +---------------+        +---------------+     |
+|   |     SF-1      |  |     SF-2      |........|     SF-n      |     |
+|   |   (Router)    |  |  (Firewall)   |        |  (Navigator)  |     |
+|   +---------------+  +---------------+        +---------------+     |
++---------------------------------------------------------------------+
+                  &lt;Software-Defined Vehicle (SDV)&gt;
+            </artwork>
+        </figure>
+
+        <t><xref target="figure:Intent-Based-SDV-Management-Framework"/> shows
+        a framework of intent-based management for SDVs. The framework
+        consists of a vehicular cloud and SDVs. The two parts of the vehicular
+        cloud and SDV borrow the components and interfaces of the I2NSF
+        framework and customize their components and interfaces for IBN-based
+        SDV management.</t>
+      </section>
+
+      <section title="IBN for Interconnection">
+        <t>New network capabilities based on programmability and
+        virtualization are producing service situations where a
+        connectivity-only approach is not sufficient. The increasing
+        availability of computing capabilities internal to the networks, or
+        attached to them, enable new scenarios where those capabilities can be
+        consumed through the advertisement or exposure of these execution
+        environments (i.e., in terms of compute, storage and associated
+        networking resources). In addition or complementary to that, even
+        services or network functions could be advertised in order to make
+        them available for interconnection. An intent-based evolved
+        interconnection framework is proposed by <xref
+        target="I-D.contreras-nmrg-interconnection-intents"/>.</t>
+
+        <t><xref target="fulfillment"/> captures the intent procedure for the
+        fulfillment phase.</t>
+
+        <figure align="center" anchor="fulfillment"
+                title="Fulfillment phase of the Interconnection Intent">
+          <artwork align="left">
+          
+
+          User Space   :       Translation / IBS       :  Network Ops
+                       :            Space              :     Space
+                       :                               :
+         +----------+  :  +----------+   +-----------+ : +-----------+
+ Fulfill |recognize/|---&gt; |translate/|--&gt;|  learn/   |--&gt;| configure/|
+         |generate  |     |          |   |  plan/    |   | provision |
+         |intent    |&lt;--- |  refine  |   |  render   | : |           |
+         +----------+  :  +----------+   +-----------+ : +-----------+
+                       :                               :
+ .........................................................................
+
+       Provider A      :                   Provider B
+       ----------      :                   ----------
+                       :
+  - Select interconn.  : - Mapping of intent types to  : - Establishment of
+    intent type        :   protocols / APIs for        :   protocol sessions
+  - Specify targeted   :   coveying targeted resources :   or API requests
+    resources (i.e.,   : - Parametrization of that     :   for configure or  
+    routes, compute    :   protocols / APIs, e.g.      :   provisioning
+    quotes, service    :   leveraging on data models   :   targeted resources
+    functions, etc.)   :                               :
+                       :                               :
+
+          </artwork>
+        </figure>
+
+        <t>Similarly, <xref target="assure"/> sketches the intent procedure
+        for the assurance phase.</t>
+
+        <figure align="center" anchor="assure"
+                title="Assurance phase of the Interconnection Intent">
+          <artwork align="left">
+          
+
+                         :                  +--------+   :         
+                         :                  |validate|   :  +----------+
+                         :                  +----^---+ &lt;----| monitor/ |
+   Assure   +-------+    :  +---------+    +-----+---+   :  | observe/ |
+            |report | &lt;---- |abstract |&lt;---| analyze | &lt;----|          |
+            +-------+    :  +---------+    |aggregate|   :  +----------+
+                         :                 +---------+   :
+   .....................................................................
+
+         Provider A      :                   Provider B
+         ----------      :                   ----------
+                         :
+    - Analysis of the    : - Checking of monitored data  : - Collection of
+      reported metrics   :   for internal closed loops   :   telemetry info
+      against the intent :   to ensure commited SLOs     :   related to 
+      request            :   (inner closed loop)         :   allocated
+    - Trigger of actions : - Aggregation of data         :   resources (i.e.,
+      if needed, e.g.,   :   producing an abstracted view:   routes, compute
+      new intent (outer  :   fitted to the intent request:   quotes, service
+      closed loop)       :                               :   functions, etc.)
+
+
+          </artwork>
+        </figure>
+
+        <t>Both Fulfillment and Assurance phases are integral part of the
+        interconnection intent.</t>
+      </section>
+
+      <section title="IBN for IETF Network Slices">
+        <t>Network slicing is emerging as the future model for service
+        offering in telecom operator networks. Conceptually, network slicing
+        provides a customer with an apparent dedicated network built on top of
+        logical (i.e. virtual) and/or physical functions and resources
+        supported by a shared infrastructure, provided by one or more telecom
+        operators. As part of an end-to-end network slice it is expected to
+        have a number of network slices at transport level (referred as IETF
+        network slices) providing the necessary connectivity to the rest of
+        components of the end-to-end slice, e.g., mobile packet core
+        slice.</t>
+
+        <t>With this respect, the GSMA has been developing a universal
+        blueprint that can be used by any vertical customer to request the
+        deployment of a network slice instance (NSI) based on a specific set
+        of service requirements. Such a blueprint is a network slice
+        descriptor called Generic Slice Template (GST). The GST contains
+        multiple attributes that can be used to characterize a network slice.
+        A particular template filled with values generates a specific Network
+        Slice Type (NEST).</t>
+
+        <t>The previous slice templates provide a number of parameters that
+        functionally characterizes the behavior of the network slice as
+        expected by the slice customer. However, apart from the slice
+        characteristics, further information is needed in order to request the
+        realization of a slice towards the IETF Network Slice controller, such
+        as identification of the slice endpoints, information about the
+        virtual network topology expected to form the requested IETF Network
+        Slice, etc.</t>
+
+        <t>An intent-based evolved interconnection framework is proposed by
+        <xref target="I-D.contreras-nmrg-transport-slice-intent"/>.</t>
+
+        <t><xref target="fulfillment_slicing"/> captures the intent procedure
+        for the fulfillment phase.</t>
+
+        <figure align="center" anchor="fulfillment_slicing"
+                title="Fulfillment phase of the IETF Network Slice service Intent">
+          <artwork align="left">
+          
+         User Space   :       Translation / IBS       :  Network Ops
+                      :            Space              :     Space
+                      :                               :
+        +----------+  :  +----------+   +-----------+ : +-----------+
+Fulfill |recognize/|---&gt; |translate/|--&gt;|  learn/   |--&gt;| configure/|
+        |generate  |     |          |   |  plan/    |   | provision |
+        |intent    |&lt;--- |  refine  |   |  render   | : |           |
+        +----------+  :  +----------+   +-----------+ : +-----------+
+                      :                               :
+.......................................................................
+
+    Slice Customer    :                   Slice Provider
+    --------------    :                   --------------
+                      :
+   - Customized Slice :  - Identification of IETF     : - Slice request
+     Templates        :    network slice endpoints    :   to IETF NSC
+   - Service SLOs as  :    and connectivity pattern   :   by using slice
+     understood by    :  - Derivation of network SLOs :   NBI YANG model 
+     slice customer   :    and SLEs from high-level   :
+                      :    Customer Service SLOs      :
+                      :                               :
+
+          </artwork>
+        </figure>
+
+        <t>Similarly, <xref target="assure_slicing"/> sketches the intent
+        procedure for the assurance phase.</t>
+
+        <figure align="center" anchor="assure_slicing"
+                title="Assurance phase of the IETF Network Slice service Intent">
+          <artwork align="left">
+          
+                       :                  +--------+   :         
+                       :                  |validate|   :  +----------+
+                       :                  +----^---+ &lt;----| monitor/ |
+ Assure   +-------+    :  +---------+    +-----+---+   :  | observe/ |
+          |report | &lt;---- |abstract |&lt;---| analyze | &lt;----|          |
+          +-------+    :  +---------+    |aggregate|   :  +----------+
+                       :                 +---------+   :
+   .....................................................................
+
+     Slice Customer    :                   Slice Provider
+     --------------    :                   --------------
+                       :
+  - Analysis of the    : - Checking of monitored data  : - Collection of
+    reported metrics   :   for internal closed loops   :   monitoring info
+    against the slice  :   to ensure commited SLOs and :   related to the
+    request            :   SLEs (inner closed loop)    :   slice (i.e., 
+  - Trigger of actions : - Aggregation of data         :   SLOs and SLEs of
+    if needed, e.g.,   :   producing an abstracted view:   connectivity
+    slice modification :   fitted to the slice request :   constructs, sdp,
+    (outer closed loop):                               :   etc.)
+
+
+          </artwork>
+        </figure>
+
+        <t>Both Fulfillment and Assurance phases are integral part of the
+        interconnection intent.</t>
+      </section>
+    </section>
+
+    <section title="Practice Learnings">
+      <section title="Difficulties and Challenges" toc="default">
+        <t>Some key learnings and takeaways can be extracted from the
+        practices and implementation of IBN systems in different use cases.
+        Commonly, there involve the following technical challenges in building
+        IBN systems, incluing handling the dynamic and time variant nature of
+        the network, the efficient management of cross-domain resources, and
+        the reliability of automatic configuration, etc. Take Service Function
+        Chaining as an example to show these challenges.</t>
+
+        <t>1. Stability in Dynamic Network Environments:</t>
+
+        <t>For instance, in the space-terrestrial networks where the network
+        topology is with frequent changes, it is essential to design efficient
+        service function chain reconstruction and service recovery mechanisms.
+        But how to guarantee the effectiveness of the chaining rule in these
+        scenarios is still a challenge.</t>
+
+        <t>2. Collaborative Management of Cross-domain SFC:</t>
+
+        <t>To ensure the network intents across multi-domain networks,
+        intent-based networks should be designed with a cross-domain
+        orchestration and management framework to ensure an end-to-end
+        optimization of Quality of Service.</t>
+
+        <t>3. Deployment under Resource-constrained Conditions:</t>
+
+        <t>It is important to consider how to effectively deploy and manage
+        these service function chains within limited resources. Methods such
+        as intent negotiation can be introduced to optimize resource
+        allocation.</t>
+      </section>
+
+      <section title="Future Research Directions">
+        <t>Although there have been extensive research achievements from
+        academic, industrial, and standardization fields, there are the
+        following future research considerations.</t>
+
+        <t>1. Generic Intent model for Full Life-Cycle Assurance:</t>
+
+        <t>It is necessary to construct an intent model for the full
+        life-cycle from both top-to-down and down-to-top perspectives,
+        including the intent input state, the intent execution state, and the
+        intent completion state, etc, merged in a generic logic model. It
+        makes sense of ensuring the end-to-end guaranteed implementation of
+        any network intent and verifying the intent state through consistent
+        mathematical logic.</t>
+
+        <t>2. Autonomous End-to-End Network Policy Generation:</t>
+
+        <t>Intent-based networks should provide the network configuration
+        policies to always well understand network service in time, in
+        particular towards various dynamic on-demand service requirements.
+        Therefore, intent-based networks should make the network quality of
+        service satisfy the users&rsquo; quality of experience from a vertical
+        perspective of the network protocol or the different intent holders.
+        Meanwhile, current network is based on domain-specific policy local
+        optimization, and it is hard to ensure an end-to-end quality of
+        service guarantee, in particular a cross-domain global optimization.
+        Therefore, intent-based networks should provide an end-to-end
+        optimization policies across multi-domain networking applications.</t>
+
+        <t>3. Intent Implementation with Large language Models (LLMs):</t>
+
+        <t>Large language models(LLMs) will play an important role in
+        enhancing the accuracy of intent refinement, resulting from the
+        powerful understanding capabilities of LLMs and the entity
+        relationships in knowledge graphs. It is also beneficial to network
+        policy generation according to the network status. Although we have
+        involved different kinds of artificial intelligence models at each
+        intent-based networks&rsquo; stages, there still lack of generality
+        and accuracy. Meanwhile, human interference is still in the full
+        life-cycle of intent-based networks, and in the future the knowledge
+        graph assisted LLMs can further reduce the human intervention, and
+        even make the human completely be out of the full life-cycle of the
+        intent-based networks.</t>
+      </section>
+    </section>
+
+    <section title="Other Considerations">
+      <t>The Integration of IBN and Network Digital Twin.(TBD)</t>
+
+      <t>The Integration of IBN, AI and Green.(TBD)</t>
+    </section>
+
+    <section anchor="Security" title="Security Considerations">
+      <t>TBD.</t>
+    </section>
+
+    <section anchor="IANA" title="IANA Considerations">
+      <t>This document has no requests to IANA.</t>
+    </section>
+
+  </middle>
+
+  <back>
+    <references title="Normative References">
+      <?rfc include="reference.RFC.2119"?>
+
+      <?rfc include="reference.RFC.6241"?>
+
+      <?rfc include="reference.RFC.8040"?>
+
+      <?rfc include="reference.RFC.8329"?>
+
+      <?rfc include="reference.RFC.9256"?>
+
+      <?rfc include="reference.RFC.9315"?>
+
+      <?rfc include="reference.RFC.9316"?>
+
+      <?rfc include="reference.RFC.9342"?>
+    </references>
+
+    <references title="Informative References">
+      <?rfc include='reference.I-D.jeong-i2nsf-security-management-automation'?>
+
+      <?rfc include='reference.I-D.yang-i2nsf-security-policy-translation'?>
+
+      <?rfc include='reference.I-D.ietf-spring-sr-policy-yang'?>
+
+      <?rfc include='reference.I-D.jeong-nmrg-ibn-network-management-automation'?>
+
+      <?rfc include='reference.I-D.jeong-opsawg-intent-based-sdv-framework'?>
+
+      <?rfc include='reference.I-D.park-nmrg-ibn-network-management-srv6'?>
+
+      <?rfc include='reference.I-D.contreras-nmrg-interconnection-intents'?>
+
+      <?rfc include='reference.I-D.contreras-nmrg-transport-slice-intent'?>
+
+      <?rfc include='reference.I-D.ydt-ippm-alt-mark-yang'?>
+
+      <?rfc include='reference.I-D.fz-ippm-on-path-telemetry-yang'?>
+
+      <?rfc include='reference.I-D.gfz-opsawg-ipfix-alt-mark'?>
+
+      <reference anchor="REST">
+        <front>
+          <title>Principled Design of the Modern Web Architecture</title>
+
+          <author initials="R." surname="Fielding"/>
+
+          <author initials="R." surname="Taylor"/>
+
+          <date month="May" year="2002"/>
+        </front>
+
+        <seriesInfo name="ACM"
+                    value="Transactions on Internet Technology, Vol. 2, Issue 2,"/>
+
+        <seriesInfo name="Available:"
+                    value="https://dl.acm.org/doi/10.1145/514183.514185"/>
+      </reference>
+    </references>
+
+    <!-- Changes -->
+
+    <section title="Changes from draft-kdj-nmrg-ibn-usecases-00">
+    <t> 
+    The following changes are made from draft-kdj-nmrg-ibn-usecases-00:
+    <list style="symbols">
+        <t>
+        This version updates the abstract so that it may be synchronized with
+        the main text.
+        </t>
+        
+        <t>
+        <xref target="figure:Life-Cycle-of-IBS-for-SDV-Management"/> is modified
+        so that it may be seen correctly.
+        </t>
+    </list>
+    </t>
+    </section>
+
+    <!-- Changes -->
+
+    <!-- Acknowledgments -->
+    
+<!--    <section anchor="ACK" numbered="false" title="Acknowledgments"> -->
+    <section anchor="ACK" numbered="false" title="Acknowledgments">   
+      <t>This work of Jaehoon Paul Jeong is supported by Institute of
+      Information &amp; Communications Technology Planning &amp; Evaluation
+      (IITP) grant funded by the Korea government, Ministry of Science and ICT
+      (MSIT) (No. RS-2024-00398199 and No. 2022-0-01015).</t>
+
+      <t>The work of Luis M. Contreras has been partially funded by the
+      European Union under Horizon Europe project NEMO (NExt generation Meta
+      Operating system) grant number 101070118.</t>
+    </section>
+
+    <!-- end Acknowledgments -->
+
+    <!-- Contributors -->
+
+    <section anchor="Contributors" numbered="false" title="Contributors">
+      <t>The following people have substantially contributed to this document
+      as co-authors:</t>
+
+      <t><figure>
+          <artwork>
+  Hongwei Yang
+  China Mobile
+  Email: yanghongwei@chinamobile.com
+
+  Giuseppe Fioccola
+  Huawei
+  Email: giuseppe.fioccola@huawei.com
+
+  Yiwen Shen 
+  Sungkyunkwan University
+  Email: chrisshen@skku.edu
+
+  Yoseop Ahn 
+  Sungkyunkwan University
+  Email: ahnjs124@skku.edu
+
+  Mose Gu 
+  Sungkyunkwan University
+  Email: rna0415@skku.edu
+
+  Jung-Soo Park
+  Electronics and Telecommunications Research Institute
+  Email: pjs@etri.re.kr
+
+  Yun-Chul Choi
+  Electronics and Telecommunications Research Institute
+  Email: cyc79@etri.re.kr
+
+</artwork>
+        </figure></t>
+    </section>
+
+    <!-- end Contributors -->
+
+  </back>
+</rfc>
